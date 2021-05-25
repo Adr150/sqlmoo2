@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %} Moovies {% endblock %}
+
+{% block body %}
+
+<form action="/actualizador" method="post" style="color: rgb(32, 34, 34);">
+
+    <input type="hidden" name="id" value="{{info.id}}">
+     <div class="form-group">
+    <input type="text" name="name" value="{{info.name}}" required>
+    </div>
+    <div class="form-group">
+    <input type="number" name="year" value="{{info.year}}" required>
+    </div>
+    <div class="form-group">
+    <textarea name="description"  cols="30" rows="10">
+    {{info.description}}
+    </textarea>
+    </div>
+    <div class="form-group">
+    <input type="text" value="{{info.image}}" name="imagelink">
+    </div>
+    <div class="form-group"><input type="submit" value="Actualizar">
+    </div>
+</form>
+    
+{% endblock %}

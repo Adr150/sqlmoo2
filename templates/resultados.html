@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %} Movies {% endblock %}
+{% block body %}
+
+    {% for resultado in response: %}
+    <div class="result">
+        <h2>{{resultado.name}}</h2> 
+    
+        <p>Year: {{resultado.year}} </p>
+    
+        <p>Description: {{resultado.description}}</p>
+        
+        
+        <img src="{{resultado.image}}"  width="80px" alt="image">
+    
+    </div>
+    {% endfor %}
+
+{% endblock %}

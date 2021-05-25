@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %} Moovies {% endblock %}
+
+{% block body %}
+<form action="/eliminar" method="post">
+    
+    <div class="form-group">
+    <select name="select" id="">
+        <option value="" selected>Elige...</option>
+        {% for item in items: %}
+            <option value="{{item.id}}">{{item.name}}</option>
+        {% endfor %}
+
+    </select>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Eliminar">
+    </div>
+</form>
+
+
+    
+{% endblock %}

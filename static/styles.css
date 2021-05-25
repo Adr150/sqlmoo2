@@ -1,0 +1,56 @@
+body{
+    background-color: rgb(226, 226, 226);
+}
+
+.container{
+    padding-top: 50px;
+    max-width: 60vw;
+}
+
+button.ruta{
+    background-color: black;
+    margin-top: 20px;
+    width: 50vh;
+    height: 100px;
+    color: white;
+    border: transparent;
+}
+
+a.boton{
+   
+    text-decoration: none;
+}
+
+.ruta:hover{
+    background-color: rgb(133, 133, 138);
+    color: rgb(182, 182, 182);
+}
+
+.image{
+    float: right;
+    position: fixed;
+    width: 20vh;
+    margin-right: 300px;
+    top: 0;
+    right: 0;
+    z-index: -5;  
+}
+
+.result{
+    width: 500px;
+    border: 2px solid rgb(49, 47, 47);
+    border-radius: 25px;
+    padding: auto;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+
+}
+
+.texto{
+    padding-left: 20px;
+    text-align: left;
+}

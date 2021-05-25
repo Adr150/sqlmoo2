@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %} Moovies {% endblock %}
+
+{% block body %}
+    
+    {%for funcion in funciones:%}
+
+       
+        <a href="views/{{funcion}}" class="boton"><button class="ruta">{{funcion}}</button></a>
+       
+        <br>
+       
+    {% endfor %}
+{% endblock %}
