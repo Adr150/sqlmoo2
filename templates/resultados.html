@@ -2,18 +2,19 @@
 {% block title %} Movies {% endblock %}
 {% block body %}
 
+<br>
+<h2>Resultados de la busqueda <br> <hr> </h2>
+
     {% for resultado in response: %}
-    <div class="result">
-        <h2>{{resultado.name}}</h2> 
-    
-        <p>Year: {{resultado.year}} </p>
-    
-        <p>Description: {{resultado.description}}</p>
-        
-        
-        <img src="{{resultado.image}}"  width="80px" alt="image">
-    
-    </div>
+        <di class="row" style="margin-top: 50px;">
+            <div class="card" style="width: 18rem;">
+                <img src="{{resultado.image}}" class="card-img-top" alt="{{resultado.name}}">
+                <div class="card-body">
+                <h5 class="card-title">{{resultado.name}} <b>{{resultado.year}}</b></h5>
+                <p class="card-text">{{resultado.description}}</p>
+                </div>
+            </div>
+        </di>
     {% endfor %}
 
 {% endblock %}

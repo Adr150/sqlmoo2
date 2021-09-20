@@ -3,25 +3,34 @@
 
 {% block body %}
 
-<form action="/actualizador" method="post" style="color: rgb(32, 34, 34);">
+<br>
 
+<h2>Actualizar <br> <hr></h2>
+
+<form action="/actualizador" method="post" style="color: rgb(32, 34, 34);">
+    <div class="form-group">
+        <label for="name">Nombre</label>
+        <input type="text" class="form-control" name="name" value="{{info.name}}" id="name" required>
+    </div>
     <input type="hidden" name="id" value="{{info.id}}">
-     <div class="form-group">
-    <input type="text" name="name" value="{{info.name}}" required>
+
+    <div class="form-group" style="max-width: 15vw;">
+        <label for="year">Año de publicacion</label>
+        <input type="number" class="form-control" name="year" id="year" value="{{info.year}}" required>
     </div>
     <div class="form-group">
-    <input type="number" name="year" value="{{info.year}}" required>
+        <label for="description">descripcion</label>
+        <textarea class="form-control" name="description" id="description" cols="30" rows="10">
+        {{info.description}}
+        </textarea>
     </div>
     <div class="form-group">
-    <textarea name="description"  cols="30" rows="10">
-    {{info.description}}
-    </textarea>
+        <label for="image">Imagen</label>
+        <input class="form-control" type="text" value="{{info.image}}" name="imagelink" id="image">
     </div>
-    <div class="form-group">
-    <input type="text" value="{{info.image}}" name="imagelink">
-    </div>
-    <div class="form-group"><input type="submit" value="Actualizar">
+
+    <div class="form-group"><input type="submit" class="btn btn-info" value="Actualizar">
     </div>
 </form>
-    
+
 {% endblock %}

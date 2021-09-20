@@ -2,13 +2,13 @@
 {% block title %} Moovies {% endblock %}
 
 {% block body %}
+<br>
+<h2>Inicio <br> <hr> </h2>
     
     {%for funcion in funciones:%}
 
        
-        <a href="views/{{funcion}}" class="boton"><button class="ruta">{{funcion}}</button></a>
-       
-        <br>
+        <a href="/{{funcion}}" class="boton"><button class="ruta">{{funcion.upper()}}</button></a>
        
     {% endfor %}
 {% endblock %}

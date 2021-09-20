@@ -1,19 +1,24 @@
-from flask import Flask, render_template, redirect, request
-import json
+from flask import Flask, render_template, redirect, request, jsonify
 import os
-from cs50 import SQL
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.sql.elements import literal_column
 
-db = SQL("sqlite:///moovie.db")
+# Set up database
+engine = create_engine("postgres://moujwumorxinad:e33450750c03940b0a975117ef00e99fde8904e5c7ad9a22c02af11a8b019127@ec2-44-193-150-214.compute-1.amazonaws.com:5432/d4206p5ccjqhor")
+db = scoped_session(sessionmaker(bind=engine))
 
-#Archivos que no me interesa ver en el menu
-nomostrar = [ "index.html","layout.html","resultados.html","actualizador.html"]
+
+# Archivos que no me interesa ver en el menu
+nomostrar = [ "index.html","layout.html","resultados.html","actualizador.html", "error.html"]
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
     x = os.listdir('templates')
-    
+    print(x)
+
     #elimina las view que no quiero mostrar
     for i in nomostrar:
         x.remove(i)
@@ -26,7 +31,7 @@ def index():
 
     return render_template("index.html",funciones = functions)
 
-#esto funciona como menu de las view similar al switch de C
+#esto funciona como menu de las view
 @app.route("/views/<string:option>")
 def hacer(option):
     return redirect('/'+option)
@@ -34,19 +39,30 @@ def hacer(option):
 @app.route("/agregar",methods=["GET","POST"])
 def insert():
     if request.method == "POST":
-        try:
-            name = request.form.get("name")
-            year = int(request.form.get("year"))
-            desc = request.form.get("description")
-            image = request.form.get("imagelink")
+        name = request.form.get("name")
+        year = int(request.form.get("year"))
+        desc = request.form.get("description")
+        image = request.form.get("imagelink")
 
-            response = db.execute("INSERT INTO movies(name,year,description,image) VALUES(:name,:year,:description,:image)" ,name=name,year=year,description=desc,image=image)
+        if not name or not year or not desc:
+            return render_template('error.html',error = 400, message = "Informacion insuficiente")
 
-            if response:
-                return redirect('/')
+        # Consulta SQL
+        consulta = "INSERT INTO movies(name,year,description,image) VALUES(:name,:year,:description,:image);"
 
-        except:
-            return "<h1>Informacion insuficiente :C </h1>"
+        # Datos
+        datos = {
+            "name":name,
+            "year":year,
+            "description":desc,
+            "image":image
+            }
+
+        response = db.execute(consulta,datos)
+        db.commit()
+
+        if response:
+            return redirect('/')
         
     else:
         return render_template("agregar.html")
@@ -55,11 +71,27 @@ def insert():
 @app.route("/buscar",methods=["GET","POST"])
 def select():
     if request.method == "POST":
-      
-        q = "%"+request.form.get("q")+"%"
+        
+        # Obtenido del formulario html
+        q = request.form.get("q")
 
-        response = db.execute("SELECT * FROM movies WHERE name LIKE :q OR year LIKE :q OR description LIKE :q", q =q)
-        print(response)
+        if not q:
+            return render_template("error.html", error=400,message="Sin datos para buscar")
+
+        q = "%"+q+"%"
+
+        # Consulta SQL
+        consulta = "SELECT * FROM movies WHERE name LIKE :q OR description LIKE :q"
+
+        # Datos 
+        datos = {"q":q}
+
+
+        # Enviar consulta a la db
+        response = db.execute(consulta,datos).fetchall()
+
+        if not len(response):
+            return render_template('error.html', error=404, message="No hay registros")
 
         return render_template("resultados.html",response = response)
             
@@ -70,7 +102,12 @@ def select():
     
 @app.route("/mostrar")
 def selectall():
-    response = db.execute("SELECT * FROM movies")
+    # Consulta SQL
+    consulta = "SELECT * FROM movies"
+    response = db.execute(consulta).fetchall()
+
+    if not len(response):
+            return render_template('error.html', error=404, message="No hay registros")
 
     return render_template("mostrar.html",response = response)
     
@@ -78,32 +115,66 @@ def selectall():
 @app.route("/actualizar",methods=["GET","POST"])
 def update():
     if request.method == "POST":
-        response = db.execute("SELECT * FROM movies WHERE id = :id ",id = request.form.get("select"))
 
-        return render_template("actualizador.html", info = response[0])
+        id = request.form.get("select")
+
+        if not id:
+            return render_template('error.html', error=400, message="No valido")
+
+        # Consulta SQL
+        consulta = "SELECT * FROM movies WHERE id = :id "
+
+        # Datos
+        datos = {
+            "id": id
+        }
+
+        response = db.execute(consulta,datos).fetchone()
+
+        return render_template("actualizador.html", info = response)
 
     else:
-        response = db.execute("SELECT * FROM movies")
+        # Consulta
+        consulta = "SELECT * FROM movies"
+
+        response = db.execute(consulta).fetchall()
+
+        if not len(response):
+            return render_template('error.html', error=404, message="No hay registros")
 
         return render_template("actualizar.html",items = response)
 
 @app.route("/actualizador",methods=["GET","POST"])
 def actualizador():
     if request.method == "POST":
-        try:
-            id = request.form.get("id")
-            name = request.form.get("name")
-            year = int(request.form.get("year"))
-            desc = request.form.get("description")
-            image = request.form.get("imagelink")
 
-            response = db.execute("UPDATE movies SET name = :name,year = :year,description = :description,image = :image WHERE id = :id" ,name=name,year=year,description=desc,image=image, id = id)
+        id_item = request.form.get("id")
+        name = request.form.get("name")
+        year = int(request.form.get("year"))
+        desc = request.form.get("description")
+        image = request.form.get("imagelink")
 
-            if response:
-                return redirect('/')
+        if not name or not year or not desc:
+            return render_template('error.html', error=400, message="Datos incompletos")
 
-        except:
-            return "<h1>Que paso master? </h1>"
+        # Consulta 
+        consulta = "UPDATE movies SET name = :name,year = :year,description = :description,image = :image WHERE id = :id"
+
+        # Datos 
+        datos = {
+            "name": name,
+            "year":year,
+            "description":desc,
+            "image":image,
+            "id":id_item
+        }
+        response = db.execute(consulta, datos)
+        db.commit()
+
+        if response:
+            return redirect('/')
+
+      
         
     else:
         return render_template("agregar.html")
@@ -112,12 +183,30 @@ def actualizador():
 @app.route("/eliminar",methods=["GET","POST"])
 def delete():
     if request.method == "POST":
-        response = db.execute("DELETE FROM movies WHERE id = :id ",id = request.form.get("select"))
+
+        id = request.form.get("select")
+
+        if not id:
+            return render_template('error.html', error=400, message="No valido")
+
+        # Consulta 
+        consulta = "DELETE FROM movies WHERE id = :id"
+
+        # Datos
+        datos = {
+            "id":id
+        }
+
+        response = db.execute(consulta, datos)
+        db.commit()
 
         return redirect('/')
 
 
     else:
-        response = db.execute("SELECT * FROM movies")
+        # Consulta
+        consulta = "SELECT * FROM movies"
+
+        response = db.execute(consulta).fetchall()
 
         return render_template("eliminar.html",items = response)
