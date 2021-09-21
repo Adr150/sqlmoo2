@@ -1,10 +1,8 @@
-{% extends "layout.html" %}
-{% block title %} Moovies {% endblock %}
-
-{% block body %}
 <br>
-<h2>Elegir <br> <hr> </h2>
-<form action="/actualizar" method="post">
+<h2>Elegir <br>
+    <hr>
+</h2>
+<form onsubmit="actualizar(this); return false;">
     <div class="form-group" style="width: 40vw;">
 
         <select name="select" class="custom-select">
@@ -20,6 +18,3 @@
         <input type="submit" class="btn btn-info" value="Actualizar">
     </div>
 </form>
-
-
-{% endblock %}

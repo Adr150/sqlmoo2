@@ -1,10 +1,7 @@
-{% extends "layout.html" %}
-{% block title %} Moovies {% endblock %}
 
-{% block body %}
 <br>
 <h2>Eliminar <br> <hr> </h2>
-<form action="/eliminar" method="post">
+<form onsubmit="eliminar(this); return false;">
 
     <div class="form-group">
         <select name="select" class="custom-select" style="width: 50vw;" id="">
@@ -19,7 +16,3 @@
         <input type="submit" class="btn btn-danger" value="Eliminar">
     </div>
 </form>
-
-
-
-{% endblock %}

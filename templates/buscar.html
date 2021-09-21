@@ -1,15 +1,18 @@
-{% extends "layout.html" %}
-{% block title %} Moovies {% endblock %}
-{% block body %}
-
 <br>
-<h2>Buscar <br> <hr> </h2>
-    <form action="/buscar" method="post">
-        <div class="form-group" style="width: 50vw;">
-            <input class="form-control" type="text" name="q">
-        </div>
-        <div class="form-group">
-            <input class="btn btn-info" type="submit" value="Buscar">
-        </div>  
-    </form>
-{% endblock %}
+<h2>Buscar <br>
+    <hr>
+</h2>
+<form action="" method="post">
+    <div class="form-group" style="width: 50vw;">
+        <!-- En este caso usamos onkeyup para obtener el valor cada que el usuario escribe algo -->
+        <input class="form-control" type="text" name="q" onkeyup="buscar(this.value)">
+    </div>
+    <div class="form-group">
+        <input class="btn btn-info" type="submit" value="Buscar">
+    </div>
+</form>
+
+<!--Div para mostrar los resultados de la busqueda-->
+<div class="container" id="resultados">
+
+</div>

@@ -1,2 +1,2 @@
 # sqlmoo2
-Ejemplo completo
+Ejemplo completo utilizando PostgreSQL y javascript

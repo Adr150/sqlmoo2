@@ -1,3 +1,6 @@
+# Ejemplo de consultas SQL
+# Elaborado por Adriel Ortiz
+
 from flask import Flask, render_template, redirect, request, jsonify
 import os
 from sqlalchemy import create_engine
@@ -31,10 +34,6 @@ def index():
 
     return render_template("index.html",funciones = functions)
 
-#esto funciona como menu de las view
-@app.route("/views/<string:option>")
-def hacer(option):
-    return redirect('/'+option)
 
 @app.route("/agregar",methods=["GET","POST"])
 def insert():
@@ -61,8 +60,8 @@ def insert():
         response = db.execute(consulta,datos)
         db.commit()
 
-        if response:
-            return redirect('/')
+        # Hacemos cambios en el retorno
+        return render_template("agregar.html")
         
     else:
         return render_template("agregar.html")
@@ -86,14 +85,40 @@ def select():
         # Datos 
         datos = {"q":q}
 
+        # -----------------------    
+        # Vamos a generar el json
+        # -----------------------
+
 
         # Enviar consulta a la db
-        response = db.execute(consulta,datos).fetchall()
+        rows = db.execute(consulta,datos).fetchall()
 
-        if not len(response):
-            return render_template('error.html', error=404, message="No hay registros")
+        if not len(rows):
+            respuesta = {
+                "items_counter":0,
+                "items":[]
+            }
+            return jsonify(respuesta)
+        # Creamos la lista para las respuestas
+        elementos = []
+        for element in rows:
+            # Creamos el diccionario temporal para la informacion
+            temp = {
+                "id":element["id"],
+                "name":element["name"],
+                "year":element["year"],
+                "description":element["description"],
+                "image":element["image"]
+            }
 
-        return render_template("resultados.html",response = response)
+            # agregamos el elemento a la lista
+            elementos.append(temp)
+
+        respuesta = {
+            "items_counter":len(elementos),
+            "items":elementos
+        }
+        return jsonify(respuesta)
             
      
 
@@ -171,8 +196,15 @@ def actualizador():
         response = db.execute(consulta, datos)
         db.commit()
 
-        if response:
-            return redirect('/')
+        # Consulta
+        consulta = "SELECT * FROM movies"
+
+        response = db.execute(consulta).fetchall()
+
+        if not len(response):
+            return render_template('error.html', error=404, message="No hay registros")
+
+        return render_template("actualizar.html",items = response)
 
       
         
@@ -200,13 +232,11 @@ def delete():
         response = db.execute(consulta, datos)
         db.commit()
 
-        return redirect('/')
 
+        
+    # Consulta
+    consulta = "SELECT * FROM movies"
 
-    else:
-        # Consulta
-        consulta = "SELECT * FROM movies"
+    response = db.execute(consulta).fetchall()
 
-        response = db.execute(consulta).fetchall()
-
-        return render_template("eliminar.html",items = response)
+    return render_template("eliminar.html",items = response)

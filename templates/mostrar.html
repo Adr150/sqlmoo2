@@ -1,20 +1,15 @@
-{% extends "layout.html" %}
-{% block title %} Moovies {% endblock %}
-
-{% block body %}
 <br>
-<h2>Mostrar todo <br> <hr> </h2>
+<h2>Mostrar todo <br>
+    <hr>
+</h2>
 {% for resultado in response: %}
-    <di class="row" style="margin-top: 50px;">
-        <div class="card" style="width: 18rem;">
-            <img src="{{resultado.image}}" class="card-img-top" alt="{{resultado.name}}">
-            <div class="card-body">
+<div class="row" style="margin-top: 50px;">
+    <div class="card" style="width: 18rem;">
+        <img src="{{resultado.image}}" class="card-img-top" alt="{{resultado.name}}">
+        <div class="card-body">
             <h5 class="card-title">{{resultado.name}} <b>{{resultado.year}}</b></h5>
             <p class="card-text">{{resultado.description}}</p>
-            </div>
         </div>
-    </di>
+    </div>
+</div>
 {% endfor %}
-
-    
-{% endblock %}

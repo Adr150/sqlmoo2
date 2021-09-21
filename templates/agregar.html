@@ -1,12 +1,7 @@
-{% extends "layout.html" %}
-{% block title %} Moovies {% endblock %}
-
-{% block body %}
-
 <br>
 <h2>Agregar <br> <hr> </h2>
 
-<form action="/agregar" method="post">
+<form  method="POST" onsubmit="agregar(this); return false;">
     <div class="form-group">
         <label for="name">Nombre</label>
         <input type="text" class="form-control" name="name" placeholder="name" required>
@@ -28,5 +23,3 @@
         <input type="submit" class="btn btn-info" value="agregar">
     </div>
 </form>
-    
-{% endblock %}

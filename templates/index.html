@@ -5,10 +5,11 @@
 <br>
 <h2>Inicio <br> <hr> </h2>
     
-    {%for funcion in funciones:%}
+    {%for ruta in funciones:%}
 
-       
-        <a href="/{{funcion}}" class="boton"><button class="ruta">{{funcion.upper()}}</button></a>
+        <!--MAndamos a llamar la funcion js para traer el contenido de cada HTML
+        Le pasamos el nombre como parametro-->
+        <button class="ruta boton" onclick="mostrarHTML('/{{ruta}}');"> {{ruta.upper()}}</button>
        
     {% endfor %}
 {% endblock %}
